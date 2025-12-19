@@ -9,7 +9,7 @@ import { BASE_URL } from '../Config'
 
 function CarDetails() {
 const {id} = useParams()
-const {cars,axios, pickupDate, setPickupDate, returnDate, setReturnDate} = useAppContext()
+const {cars,axios, pickupDate, setPickupDate, returnDate, setReturnDate, token} = useAppContext()
 
   const navigate = useNavigate()
   const [car,setCar] = useState(null)
@@ -17,6 +17,13 @@ const {cars,axios, pickupDate, setPickupDate, returnDate, setReturnDate} = useAp
 
   const handleSubmit = async (e)=>{
     e.preventDefault();
+    
+    if (!token) {
+      toast.error('Please login to book a car')
+      navigate('/login')
+      return
+    }
+    
    try {
     const {data}=await axios.post(`${BASE_URL}/api/booking/create`,{car:id,pickupDate,returnDate})
     if(data.success){
